@@ -1,0 +1,25 @@
+<div class="header">
+   <div class="title">
+    <p>IC ENC</p>
+</div>
+
+    <div class="navigation">
+        <ul class="nav-list">
+            <li *ngFor="let item of header" class="nav-item" [class.has-dropdown]="item.children">
+                <a *ngIf="item.route; else noRoute" [routerLink]="item.route" class="nav-link">{{ item.title }}</a>
+                <ng-template #noRoute>
+                    <a href="" class="nav-link">{{ item.title }}</a>
+                </ng-template>
+
+                <!-- Dropdown -->
+                <ul *ngIf="item.children" class="dropdown">
+                    <li *ngFor="let child of item.children" class="dropdown-item">
+                        <a href="">{{ child }}</a> 
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <button>JOIN</button>
+    </div>
+</div>

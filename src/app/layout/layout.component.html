@@ -1,2 +1,12 @@
-<app-header></app-header>
-<app-hero-page></app-hero-page>
+<div class="header-nav">
+  <div class="logo">My App</div>
+  <ul class="nav-list">
+    <li><a routerLink="/hero" routerLinkActive="active">Hero</a></li>
+    <li><a routerLink="/table" routerLinkActive="active">Table</a></li>
+    <li><a routerLink="/sidebar" routerLinkActive="active">Sidebar</a></li>
+  </ul>
+</div>
+
+<router-outlet></router-outlet>
+
+

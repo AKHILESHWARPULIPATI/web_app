@@ -1,0 +1,40 @@
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #003366;
+  padding: 16px 32px;
+  color: white;
+
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+
+    li {
+      a {
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        padding: 8px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #0055aa;
+        }
+
+        &.active {
+          background-color: #007acc;
+        }
+      }
+    }
+  }
+}

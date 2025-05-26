@@ -1,0 +1,62 @@
+<div class="table-container">
+  <div class="table-title">
+    <div class="tile">Geospatial Chart Overview</div>
+    <div class="filter-section">
+      <input type="text" placeholder="Search..." [(ngModel)]="searchText" (input)="applyFilters()" />
+
+      <div class="date-range-contianer">
+         
+      <input type="date" id="dateFrom" [(ngModel)]="filterDateFrom" (change)="applyFilters()" />
+
+      <input type="date" id="dateTo" [(ngModel)]="filterDateTo" (change)="applyFilters()" />
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isAddingNewRow" class="new-row">
+    <div *ngFor="let key of objectEntries(tableData[0])">
+      <label>{{ key[0] }}</label>
+      <input type="text" (input)="onInputChange($event, key[0])">
+    </div>
+    <button (click)="confirmAddRow()">Add Row</button>
+    <button (click)="cancelAddRow()">Cancel</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>S. No.</th>
+          <th *ngFor="let key of objectEntries(tableData[0])" (click)="sortData(key[0])" class="sortable-header">
+            {{ key[0] }}
+            <span *ngIf="sortColumn === key[0]">
+              <i *ngIf="sortDirection === 'asc'" class="fas fa-arrow-up"></i>
+              <i *ngIf="sortDirection === 'desc'" class="fas fa-arrow-down"></i>
+            </span>
+            <span *ngIf="sortColumn !== key[0]">⇅</span>
+          </th>
+          <th *ngIf="toggleAction">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of paginatedData; let i = index">
+          <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+          <td *ngFor="let key of objectEntries(row)">{{ key[1] }}</td>
+          <td *ngIf="toggleAction">
+            <input type="checkbox" (change)="toggleRowSelection(i)">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button class="page-button" [ngClass]="{ 'disabled': currentPage === 1 }" (click)="goToPreviousPage()">
+      Previous
+    </button>
+    <span class="page-info">{{ currentPage }} of {{ totalPages }}</span>
+    <button class="page-button" [ngClass]="{ 'disabled': currentPage === totalPages }" (click)="goToNextPage()">
+      Next
+    </button>
+  </div>
+</div>

@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface DropDownProperty {
-  name: string;
+  title: string;
   releaseDate: Date;
-  finalDate: Date;
+  EditionNo: number;
+  UpdatedNo: number;
 }
 
 interface DropDownPropertyWithExpand extends DropDownProperty {
@@ -45,6 +46,7 @@ interface SidebarItem {
 export class SidebarComponent {
   selectedProperties: DropDownPropertyWithExpand[] = [];
   selectedChartName: string = '';
+  selectedMiniChart: MiniDropDown | null = null;
 
   sidebarData: SidebarItem[] = [
     {
@@ -52,7 +54,7 @@ export class SidebarComponent {
       expanded: false,
       dropdown: [
         {
-          name: 'east coast',
+          name: 'East Coast',
           expanded: false,
           dropDownItems: [
             {
@@ -60,18 +62,19 @@ export class SidebarComponent {
               expanded: false,
               miniDropDown: [
                 {
-                  name: 'chart1',
+                  name: 'Chart 01',
                   expanded: false,
                   dropDownProperties: [
                     {
-                      name: 'title',
-                      releaseDate: new Date('2023-01-01'),
-                      finalDate: new Date('2023-12-31'),
+                      title: 'Indian chart',
+                      releaseDate: new Date(),
+                      EditionNo: 5,
+                      UpdatedNo: 2
                     }
                   ]
                 },
                 {
-                  name: 'chart 2',
+                  name: 'Chart 02',
                   expanded: false,
                   dropDownProperties: []
                 }
@@ -82,18 +85,19 @@ export class SidebarComponent {
               expanded: false,
               miniDropDown: [
                 {
-                  name: 'chart1',
+                  name: 'Chart 01',
                   expanded: false,
                   dropDownProperties: [
                     {
-                      name: 'title',
-                      releaseDate: new Date('2023-01-01'),
-                      finalDate: new Date('2023-12-31'),
+                      title: 'Indian chart',
+                      releaseDate: new Date(),
+                      EditionNo: 2,
+                      UpdatedNo: 4
                     }
                   ]
                 },
                 {
-                  name: 'chart 2',
+                  name: 'Chart 02',
                   expanded: false,
                   dropDownProperties: []
                 }
@@ -102,7 +106,7 @@ export class SidebarComponent {
           ]
         },
         {
-          name: 'west coast',
+          name: 'West Coast',
           expanded: false,
           dropDownItems: []
         }
@@ -110,47 +114,63 @@ export class SidebarComponent {
     }
   ];
 
- toggleExpand(item: any): void {
-  item.expanded = !item.expanded;
+  toggleExpand(item: any): void {
+    item.expanded = !item.expanded;
 
-  if (!item.expanded) {
-    this.collapseChildren(item);
-  }
-}
-
-collapseChildren(item: any): void {
-  if (item.dropdown) {
-    for (let dropdown of item.dropdown) {
-      dropdown.expanded = false;
-      this.collapseChildren(dropdown);
+    if (!item.expanded) {
+      this.collapseChildren(item);
     }
   }
 
-  if (item.dropDownItems) {
-    for (let dropDownItem of item.dropDownItems) {
-      dropDownItem.expanded = false;
-      this.collapseChildren(dropDownItem);
+  collapseChildren(item: any): void {
+    if (item.dropdown) {
+      for (let dropdown of item.dropdown) {
+        dropdown.expanded = false;
+        this.collapseChildren(dropdown);
+      }
+    }
+
+    if (item.dropDownItems) {
+      for (let dropDownItem of item.dropDownItems) {
+        dropDownItem.expanded = false;
+        this.collapseChildren(dropDownItem);
+      }
+    }
+
+    if (item.miniDropDown) {
+      for (let mini of item.miniDropDown) {
+        mini.expanded = false;
+        this.collapseChildren(mini);
+      }
+    }
+
+    if (item.dropDownProperties) {
+      for (let prop of item.dropDownProperties) {
+        prop.expanded = false;
+      }
     }
   }
 
-  if (item.miniDropDown) {
-    for (let mini of item.miniDropDown) {
-      mini.expanded = false;
-      this.collapseChildren(mini);
+  onSingleCheckboxSelect(mini: MiniDropDown, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+
+    if (checkbox.checked) {
+      this.selectedProperties = mini.dropDownProperties.map(p => ({ ...p, expanded: false }));
+      this.selectedChartName = mini.name;
+      this.selectedMiniChart = mini;
+    } else {
+      this.onCancel(); 
     }
   }
 
-  if (item.dropDownProperties) {
-    for (let prop of item.dropDownProperties) {
-      prop.expanded = false;
-    }
+  onCancel(): void {
+    this.selectedProperties = [];
+    this.selectedChartName = '';
+    this.selectedMiniChart = null;
   }
-}
 
-
-  onDoubleClick(properties: DropDownProperty[], chartName: string): void {
-    this.selectedProperties = properties.map(p => ({ ...p, expanded: false }));
-    this.selectedChartName = chartName;
+  isChartSelected(mini: MiniDropDown): boolean {
+    return this.selectedMiniChart === mini;
   }
 
   togglePropertyExpand(prop: DropDownPropertyWithExpand): void {

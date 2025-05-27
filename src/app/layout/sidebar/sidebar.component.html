@@ -2,63 +2,75 @@
   <div class="sidebar">
     <div *ngFor="let item of sidebarData" class="sidebar-item">
       <p class="sidebar-header" (click)="toggleExpand(item)">
-        {{ item.name }}
-        <span class="toggle-icon">{{ item.expanded ? '▼' : '▶' }}</span>
+        <span class="toggle-icon">
+          <i class="fa-solid" [ngClass]="item.expanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+        </span>
+        <span class="folder-icon"><i class="fa-solid fa-earth-asia"></i></span> {{ item.name }}
       </p>
 
       <div *ngIf="item.expanded" class="dropdown">
         <div *ngFor="let dropdown of item.dropdown" class="dropdown-item">
           <p class="dropdown-header" (click)="toggleExpand(dropdown)">
-            {{ dropdown.name }}
-            <span class="toggle-icon">{{ dropdown.expanded ? '▼' : '▶' }}</span>
+            <span class="toggle-icon">
+              <i class="fa-solid" [ngClass]="dropdown.expanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            </span><i class="fa-solid fa-layer-group"></i> {{ dropdown.name }}
           </p>
 
           <div *ngIf="dropdown.expanded && dropdown.dropDownItems" class="drop-down-items">
             <div *ngFor="let dropDownItem of dropdown.dropDownItems" class="drop-down-item">
               <p class="item-header" (click)="toggleExpand(dropDownItem)">
-                {{ dropDownItem.name }}
-                <span class="toggle-icon">{{ dropDownItem.expanded ? '▼' : '▶' }}</span>
+                <span class="toggle-icon">
+                  <i class="fa-solid" [ngClass]="dropDownItem.expanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+                </span><i class="fa-solid fa-sheet-plastic"></i> {{ dropDownItem.name }}
               </p>
 
               <div *ngIf="dropDownItem.expanded && dropDownItem.miniDropDown" class="mini-dropdown">
                 <div *ngFor="let mini of dropDownItem.miniDropDown" class="mini-item">
-                  <p class="mini-header" (click)="toggleExpand(mini)"
-                       (dblclick)="onDoubleClick(mini.dropDownProperties, mini.name)">
-                    {{ mini.name }}
-                    <span class="toggle-icon">{{ mini.expanded ? '▼' : '▶' }}</span>
-                </p>
+                  <div class="chart-container">
+                    <p class="mini-header" (click)="toggleExpand(mini)">
+                      <span class="toggle-icon">
+                        <i class="fa-solid" [ngClass]="mini.expanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+                      </span> <i class="fa-solid fa-chart-simple"></i> {{ mini.name }}
+                    </p>
+                    <input type="checkbox" [checked]="isChartSelected(mini)"
+                      (change)="onSingleCheckboxSelect(mini, $event)">
+                  </div>
 
                   <div *ngIf="mini.expanded && mini.dropDownProperties?.length" class="dropdown-properties-sidebar">
                     <div *ngFor="let prop of mini.dropDownProperties" class="sidebar-property-key">
-                      <p>{{ prop.name }}</p>
-                      <p>Released:</p>
-                      <p>Final: </p>
+                      <p>Title</p>
+                      <p>Released Date</p>
+                      <p>Edition No</p>
+                      <p>Updated No</p>
                     </div>
                   </div>
+
                 </div>
               </div>
-
             </div>
           </div>
 
         </div>
       </div>
-
     </div>
   </div>
 
-  <div class="selected-chart" *ngIf="selectedProperties.length > 0">
-    <h3>{{ selectedChartName }}</h3>
+  <div class="selected-chart" *ngIf="selectedMiniChart">
+    <div class="header">
+      <h3>{{ selectedChartName }} </h3>
+      <p><i class="fa-solid fa-xmark" (click)="onCancel()"></i></p>
+    </div>
+
     <div class="properties-list">
       <div *ngFor="let prop of selectedProperties" class="property-item">
         <div class="property-name" (click)="togglePropertyExpand(prop)">
-          {{ prop.name }}
-          <span class="toggle-icon">{{ prop.expanded ? '−' : '+' }}</span>
         </div>
 
-        <div *ngIf="prop.expanded" class="property-details">
-          <div>Released: {{ prop.releaseDate | date:'mediumDate' }}</div>
-          <div>Final: {{ prop.finalDate | date:'mediumDate' }}</div>
+        <div class="property-details">
+          <p>Title: <span>{{ prop.title }}</span></p>
+          <p>Released: <span>{{ prop.releaseDate }}</span></p>
+          <p>Edition No: <span>{{ prop.EditionNo }}</span></p>
+          <p>Updated No: <span>{{ prop.UpdatedNo }}</span></p>
         </div>
       </div>
     </div>
